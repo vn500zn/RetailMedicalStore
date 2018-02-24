@@ -1,0 +1,31 @@
+package com.rmswebservice.service;
+
+import org.apache.commons.logging.Log;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.rmsutil.domain.UserAuthentication;
+import com.rmsutil.util.JsonUtil;
+import com.rmswebservice.dao.UserAuthenticationMasterDAO;
+
+@Service
+public class UserServiceImpl implements UserService{
+	private static Logger logger=LogManager.getLogger(UserServiceImpl.class);
+	@Autowired
+private UserAuthenticationMasterDAO userAuthenticationMasterDAO;
+	
+	public String login(String jsonUserAuth) {
+		UserAuthentication userAuthentication=JsonUtil.convertJsonToJava(jsonUserAuth,UserAuthentication.class);
+		if(userAuthentication!=null){
+			logger.info("Entered into login ::"+jsonUserAuth);
+			userAuthentication=userAuthenticationMasterDAO.login(userAuthentication);
+	jsonUserAuth=JsonUtil.convertJavaToJson(userAuthentication);
+	logger.info("Response of login ::"+jsonUserAuth);
+		}
+		return jsonUserAuth;
+	}
+	
+
+}
